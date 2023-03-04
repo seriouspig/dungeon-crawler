@@ -22,7 +22,7 @@ export default function Box2(props) {
     // </mesh>
 
     <Box castShadow receiveShadow position={props.position}>
-      <meshStandardMaterial attach="material" map={earth} />
+      <meshBasicMaterial attach="material" map={earth} />
     </Box>
   );
 }
