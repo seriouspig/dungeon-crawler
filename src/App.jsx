@@ -38,6 +38,9 @@ const MazeModel = () => {
 
 const App = () => {
   const earth = new TextureLoader().load("textures/floor.jpg");
+  earth.wrapS = THREE.RepeatWrapping;
+  earth.wrapT = THREE.RepeatWrapping;
+  earth.repeat.set(30, 30);
 
   const EPS = 1e-5;
 
@@ -163,7 +166,7 @@ const App = () => {
           args={[60, 60, 1]}
           position={[0, -0.5, 0]}
         >
-          <meshStandardMaterial map={earth} />
+          <meshStandardMaterial map={earth}  />
         </Plane>
 
         <CameraControls ref={cameraControlRef} distance={0.01} />
