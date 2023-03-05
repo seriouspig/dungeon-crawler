@@ -2,7 +2,7 @@ import "./styles.css";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { PerspectiveCamera, CameraControls, Plane } from "@react-three/drei";
 import { Suspense, useState, useRef, useEffect } from "react";
-import Box2 from "./Box";
+import Box3 from "./Box3";
 import { useTexture } from "@react-three/drei";
 import { TextureLoader } from "three";
 
@@ -28,7 +28,7 @@ const MazeModel = () => {
   for (let i = 0; i < mazeArray.length; i++) {
     for (let j = 0; j < mazeArray[i].length; j++) {
       if (mazeArray[i][j] == 1) {
-        arrayOfBlocks.push(<Box2 position={[j - 5, 0, i - 5]} />);
+        arrayOfBlocks.push(<Box3 position={[j - 5, 0, i - 5]} />);
       }
     }
   }
@@ -37,7 +37,7 @@ const MazeModel = () => {
 
 const App = () => {
 
-      const earth = new TextureLoader().load("./img/floor.jpg");
+      const earth = new TextureLoader().load("textures/floor.jpg");
 
   const EPS = 1e-5;
 
@@ -143,13 +143,13 @@ const App = () => {
           position={[2, 20, 2]}
           color="#ffffff"
           intensity={2.5}
-          shadow-mapSize-height={1024}
-          shadow-mapSize-width={1024}
-          shadow-camera-far={50}
-          shadow-camera-left={-10}
-          shadow-camera-right={10}
-          shadow-camera-top={10}
-          shadow-camera-bottom={-10}
+          // shadow-mapSize-height={1024}
+          // shadow-mapSize-width={1024}
+          // shadow-camera-far={50}
+          // shadow-camera-left={-10}
+          // shadow-camera-right={10}
+          // shadow-camera-top={10}
+          // shadow-camera-bottom={-10}
           castShadow
         />
         <Plane
