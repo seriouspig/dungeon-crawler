@@ -1,11 +1,12 @@
 import "./styles.css";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { PerspectiveCamera, CameraControls, Plane } from "@react-three/drei";
+import { PerspectiveCamera, CameraControls, Plane, usePerformanceMonitor } from "@react-three/drei";
 import { Suspense, useState, useRef, useEffect } from "react";
 import Box3 from "./Box3";
 import { useTexture } from "@react-three/drei";
 import { TextureLoader } from "three";
-
+import { MathUtils } from "three";
+import * as THREE from "three";
 
 const mazeArray = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -28,7 +29,7 @@ const MazeModel = () => {
   for (let i = 0; i < mazeArray.length; i++) {
     for (let j = 0; j < mazeArray[i].length; j++) {
       if (mazeArray[i][j] == 1) {
-        arrayOfBlocks.push(<Box3 position={[j - 5, 0, i - 5]} />);
+        arrayOfBlocks.push(<Box3 position={[j - 5, 0, i - 5]} receiveShadow />);
       }
     }
   }
@@ -36,8 +37,7 @@ const MazeModel = () => {
 };
 
 const App = () => {
-
-      const earth = new TextureLoader().load("textures/floor.jpg");
+  const earth = new TextureLoader().load("textures/floor.jpg");
 
   const EPS = 1e-5;
 
@@ -46,11 +46,13 @@ const App = () => {
   const DEG90 = Math.PI / 2;
 
   const canvasRef = useRef(null);
+  const light = useRef();
 
   const [position, setPosition] = useState([0, 0, 0]);
   const [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
-  const [playerDirection, setPlayerDirection] = useState('N')
-  const directions = ['N', 'E', 'S', 'W']
+  const [playerDirection, setPlayerDirection] = useState("N");
+  const directions = ["N", "E", "S", "W"];
+
 
   const checkifBlockToNorth = (currentPos) => {
     const wallToNorth = mazeArray[currentPos[2] - 1 + 5][currentPos[0] + 5];
@@ -84,15 +86,15 @@ const App = () => {
     if (checkifBlockToNorth(newPos)) {
       cameraControlRef.current?.forward(1, true);
     } else {
-      console.log("Can't move - block in front")
+      console.log("Can't move - block in front");
     }
-    
   };
   const handleMoveBackward = () => {
     cameraControlRef.current?.forward(-1, true);
   };
   const handleMoveLeft = () => {
     cameraControlRef.current?.truck(-1, 0, true);
+
   };
   const handleMoveRight = () => {
     cameraControlRef.current?.truck(1, 0, true);
@@ -139,19 +141,22 @@ const App = () => {
           shadow-mapSize-width={512}
           intensity={0.8}
         /> */}
-        <spotLight
-          position={[2, 20, 2]}
-          color="#ffffff"
-          intensity={2.5}
-          // shadow-mapSize-height={1024}
-          // shadow-mapSize-width={1024}
-          // shadow-camera-far={50}
-          // shadow-camera-left={-10}
-          // shadow-camera-right={10}
-          // shadow-camera-top={10}
-          // shadow-camera-bottom={-10}
+        {/* <spotLight
+          position={[2.5, 5, 5]}
+          angle={Math.PI / 3}
+          penumbra={0.5}
           castShadow
+          shadow-mapSize-height={2048}
+          shadow-mapSize-width={2048}
+        /> */}
+        <pointLight
+          ref={light}
+          position={[0, 0.5, 0]}
+          intensity={2}
+          castShadow
+          distance={3}
         />
+        <ambientLight intensity={0.01} />
         <Plane
           receiveShadow
           rotation={[Math.PI / -2, 0, 0]}

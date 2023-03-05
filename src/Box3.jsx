@@ -21,7 +21,7 @@ export default function Box3(props) {
     // </mesh>
 
     <Box castShadow receiveShadow position={props.position}>
-      <meshBasicMaterial attach="material" map={earth} />
+      <meshStandardMaterial attach="material" map={earth}/>
     </Box>
 
 

@@ -33,7 +33,7 @@ export default function Box2(props) {
     // </Box>
 
     <mesh ref={meshRef}>
-      <boxBufferGeometry args={[3, 3, 3]} />
+      <boxBufferGeometry args={[3, 3, 3]} receiveShadow/>
       {map.map((texture, idx) => (
         <meshBasicMaterial
           key={texture.id}
