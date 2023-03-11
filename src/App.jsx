@@ -1,12 +1,18 @@
 import "./styles.css";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { PerspectiveCamera, CameraControls, Plane, usePerformanceMonitor } from "@react-three/drei";
+import {
+  PerspectiveCamera,
+  CameraControls,
+  Plane,
+  usePerformanceMonitor,
+} from "@react-three/drei";
 import { Suspense, useState, useRef, useEffect } from "react";
 import Box3 from "./Box3";
 import { useTexture } from "@react-three/drei";
 import { TextureLoader } from "three";
 import { MathUtils } from "three";
 import * as THREE from "three";
+import state from "./state";
 
 const mazeArray = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -36,26 +42,55 @@ const MazeModel = () => {
   return arrayOfBlocks;
 };
 
+const MovingLight = (props) => {
+  const [pp, setPp] = useState(props.playerPos);
+  const light = useRef();
+  // useFrame((state) => {
+  //   light.current.position.lerp({ x, y, z }, 0.1);
+  //   console.log(state)
+  // });
+  // useFrame(() => {
+  //   // lerp cam position to destination
+  //   // light.position.lerp(destination, 0.1);
+  //   // pause or unpause the loop based on the distance From camera or other heuristics
+  //   console.log(light.current.position);
+
+  //   const newPos = new THREE.Vector3(
+  //     props.playerPos[0],
+  //     props.playerPos[1],
+  //     props.playerPos[2]
+  //   );
+  //     console.log("NEW POS")
+  //   console.log(newPos)
+
+  //   // light.current.position.lerp(newPos);
+  // });
+
+  useFrame(({ camera, scene }) => {
+    if (state.shouldUpdate) {
+      light.current.position.lerp(state.target, 0.1);
+    }
+  });
+
+  return <pointLight ref={light} intensity={2} castShadow distance={3} />;
+};
+
 const App = () => {
   const earth = new TextureLoader().load("textures/floor.jpg");
   earth.wrapS = THREE.RepeatWrapping;
   earth.wrapT = THREE.RepeatWrapping;
   earth.repeat.set(30, 30);
 
-  const EPS = 1e-5;
-
   const cameraControlRef = useRef(null);
   const DEG45 = Math.PI / 4;
   const DEG90 = Math.PI / 2;
 
   const canvasRef = useRef(null);
-  const light = useRef();
 
   const [position, setPosition] = useState([0, 0, 0]);
   const [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
   const [playerDirection, setPlayerDirection] = useState("N");
   const directions = ["N", "E", "S", "W"];
-
 
   const checkifBlockToNorth = (currentPos) => {
     const wallToNorth = mazeArray[currentPos[2] - 1 + 5][currentPos[0] + 5];
@@ -86,21 +121,38 @@ const App = () => {
     let newY = round(cameraControlRef.current._camera.position.y);
     let newZ = round(cameraControlRef.current._camera.position.z);
     let newPos = [newX, newY, newZ];
-    if (checkifBlockToNorth(newPos)) {
+        // state.posX = cameraControlRef.current._camera.position.x;
+        // state.posY = cameraControlRef.current._camera.position.y;
+        // state.posZ = cameraControlRef.current._camera.position.z;
+        state.posX -= 1;
+        state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+
       cameraControlRef.current?.forward(1, true);
-    } else {
-      console.log("Can't move - block in front");
-    }
+
   };
   const handleMoveBackward = () => {
     cameraControlRef.current?.forward(-1, true);
+        // state.posX = cameraControlRef.current._camera.position.x;
+        // state.posY = cameraControlRef.current._camera.position.y;
+        // state.posZ = cameraControlRef.current._camera.position.z;
+        state.posX += 1;
+        state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
   };
   const handleMoveLeft = () => {
-    cameraControlRef.current?.truck(-1, 0, true);
 
+    console.log(cameraControlRef.current._camera.position.x)
+    state.posX = cameraControlRef.current._camera.position.x;
+    state.posY = cameraControlRef.current._camera.position.y;
+    state.posZ = cameraControlRef.current._camera.position.z;
+    state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+    cameraControlRef.current?.truck(-1, 0, true);
   };
   const handleMoveRight = () => {
     cameraControlRef.current?.truck(1, 0, true);
+        state.posX = cameraControlRef.current._camera.position.x;
+        state.posY = cameraControlRef.current._camera.position.y;
+        state.posZ = cameraControlRef.current._camera.position.z;
+        state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
   };
 
   return (
@@ -127,46 +179,15 @@ const App = () => {
       </button>
       <button onClick={updateCameraPosition}>update camera position</button>
       <Canvas ref={canvasRef} shadows shadowMap>
-        {/* <rectAreaLight
-          width={3}
-          height={3}
-          color={"#666666"}
-          intensity={1}
-          position={[-2, 1, 5]}
-          lookAt={[0, 0, 0]}
-          penumbra={1}
-          castShadow
-        /> */}
-        {/* <ambientLight intensity={0.2} />
-        <directionalLight
-          castShadow
-          shadow-mapSize-height={512}
-          shadow-mapSize-width={512}
-          intensity={0.8}
-        /> */}
-        {/* <spotLight
-          position={[2.5, 5, 5]}
-          angle={Math.PI / 3}
-          penumbra={0.5}
-          castShadow
-          shadow-mapSize-height={2048}
-          shadow-mapSize-width={2048}
-        /> */}
-        <pointLight
-          ref={light}
-          position={[0, 0.5, 0]}
-          intensity={2}
-          castShadow
-          distance={3}
-        />
-        <ambientLight intensity={0.01} />
+        <MovingLight playerPos={playerPosition} />
+        {/* <ambientLight intensity={0.01} /> */}
         <Plane
           receiveShadow
           rotation={[Math.PI / -2, 0, 0]}
           args={[60, 60, 1]}
           position={[0, -0.5, 0]}
         >
-          <meshStandardMaterial map={earth}  />
+          <meshStandardMaterial map={earth} />
         </Plane>
 
         <CameraControls ref={cameraControlRef} distance={0.01} />
