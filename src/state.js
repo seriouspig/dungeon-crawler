@@ -3,13 +3,14 @@ import * as THREE from "three";
 // model s name: "object005_bod_0"
 const state = {
   boxPos: new THREE.Vector3(4, 0, 0),
-  cameraPos: new THREE.Vector3(9, 2, 4),
+  cameraPos: new THREE.Vector3(0, 0, 0),
 
   posX: 0,
   posY: 0,
   posZ: 0,
   target: new THREE.Vector3(0, 0, 0),
   shouldUpdate: true,
+  playerDir: "N"
 };
 
 export default state;

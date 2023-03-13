@@ -13,6 +13,8 @@ import { TextureLoader } from "three";
 import { MathUtils } from "three";
 import * as THREE from "three";
 import state from "./state";
+import maze from "./maze";
+import CameraControl from "./CameraControl";
 
 const mazeArray = [
   [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -32,9 +34,9 @@ const mazeArray = [
 
 const MazeModel = () => {
   let arrayOfBlocks = [];
-  for (let i = 0; i < mazeArray.length; i++) {
-    for (let j = 0; j < mazeArray[i].length; j++) {
-      if (mazeArray[i][j] == 1) {
+  for (let i = 0; i < maze.length; i++) {
+    for (let j = 0; j < maze[i].length; j++) {
+      if (maze[i][j] == 1) {
         arrayOfBlocks.push(<Box3 position={[j - 5, 0, i - 5]} receiveShadow />);
       }
     }
@@ -45,26 +47,6 @@ const MazeModel = () => {
 const MovingLight = (props) => {
   const [pp, setPp] = useState(props.playerPos);
   const light = useRef();
-  // useFrame((state) => {
-  //   light.current.position.lerp({ x, y, z }, 0.1);
-  //   console.log(state)
-  // });
-  // useFrame(() => {
-  //   // lerp cam position to destination
-  //   // light.position.lerp(destination, 0.1);
-  //   // pause or unpause the loop based on the distance From camera or other heuristics
-  //   console.log(light.current.position);
-
-  //   const newPos = new THREE.Vector3(
-  //     props.playerPos[0],
-  //     props.playerPos[1],
-  //     props.playerPos[2]
-  //   );
-  //     console.log("NEW POS")
-  //   console.log(newPos)
-
-  //   // light.current.position.lerp(newPos);
-  // });
 
   useFrame(({ camera, scene }) => {
     if (state.shouldUpdate) {
@@ -87,14 +69,34 @@ const App = () => {
 
   const canvasRef = useRef(null);
 
-  const [position, setPosition] = useState([0, 0, 0]);
+  const playerRef = useRef(null);
+
   const [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
   const [playerDirection, setPlayerDirection] = useState("N");
   const directions = ["N", "E", "S", "W"];
 
   const checkifBlockToNorth = (currentPos) => {
-    const wallToNorth = mazeArray[currentPos[2] - 1 + 5][currentPos[0] + 5];
+    const wallToNorth = maze[currentPos[2] - 1 + 5][currentPos[0] + 5];
+    console.log(wallToNorth);
     if (wallToNorth == 0) return true;
+    return false;
+  };
+  const checkifBlockToWest = (currentPos) => {
+    const wallToWest = maze[currentPos[2] + 5][currentPos[0] - 1 + 5];
+    console.log(wallToWest);
+    if (wallToWest == 0) return true;
+    return false;
+  };
+  const checkifBlockToEast = (currentPos) => {
+    const wallToEast = maze[currentPos[2] + 5][currentPos[0] + 1 + 5];
+    console.log(wallToEast);
+    if (wallToEast == 0) return true;
+    return false;
+  };
+  const checkifBlockToSouth = (currentPos) => {
+    const wallToSouth = maze[currentPos[2] + 1 + 5][currentPos[0] + 5];
+    console.log(wallToSouth);
+    if (wallToSouth == 0) return true;
     return false;
   };
 
@@ -110,6 +112,7 @@ const App = () => {
     let newPos = [newX, newY, newZ];
     setPlayerPosition(newPos);
     checkifBlockToNorth(newPos);
+    console.log(playerDirection);
   };
 
   useEffect(() => {
@@ -117,42 +120,82 @@ const App = () => {
   }, [playerPosition]);
 
   const handleMoveForward = () => {
-    let newX = round(cameraControlRef.current._camera.position.x);
-    let newY = round(cameraControlRef.current._camera.position.y);
-    let newZ = round(cameraControlRef.current._camera.position.z);
-    let newPos = [newX, newY, newZ];
-        // state.posX = cameraControlRef.current._camera.position.x;
-        // state.posY = cameraControlRef.current._camera.position.y;
-        // state.posZ = cameraControlRef.current._camera.position.z;
-        state.posX -= 1;
-        state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-
-      cameraControlRef.current?.forward(1, true);
-
+    console.log(playerPosition);
+    console.log(checkifBlockToNorth(playerPosition));
+    console.log(state.playerDir);
+    if (
+      state.playerDir === "N" &&
+      checkifBlockToNorth([state.posX, state.posY, state.posZ])
+    ) {
+      state.posZ -= 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.forward(1.1, true);
+    } else if (
+      state.playerDir === "W" &&
+      checkifBlockToWest([state.posX, state.posY, state.posZ])
+    ) {
+      state.posX -= 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.forward(1.1, true);
+    } else if (
+      state.playerDir === "E" &&
+      checkifBlockToEast([state.posX, state.posY, state.posZ])
+    ) {
+      state.posX += 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.forward(1.1, true);
+    } else if (
+      state.playerDir === "S" &&
+      checkifBlockToSouth([state.posX, state.posY, state.posZ])
+    ) {
+      state.posZ += 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.forward(1.1, true);
+    }
   };
   const handleMoveBackward = () => {
-    cameraControlRef.current?.forward(-1, true);
-        // state.posX = cameraControlRef.current._camera.position.x;
-        // state.posY = cameraControlRef.current._camera.position.y;
-        // state.posZ = cameraControlRef.current._camera.position.z;
-        state.posX += 1;
-        state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+    console.log(playerPosition);
+    console.log(checkifBlockToNorth(playerPosition));
+    console.log(state.playerDir);
+    if (
+      state.playerDir === "N" &&
+      checkifBlockToSouth([state.posX, state.posY, state.posZ])
+    ) {
+      state.posZ += 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.forward(-1.1, true);
+    } else if (
+      state.playerDir === "W" &&
+      checkifBlockToEast([state.posX, state.posY, state.posZ])
+    ) {
+      state.posX += 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.forward(-1.1, true);
+    } else if (
+      state.playerDir === "E" &&
+      checkifBlockToEast([state.posX, state.posY, state.posZ])
+    ) {
+      state.posX -= 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.forward(-1.1, true);
+    } else if (
+      state.playerDir === "S" &&
+      checkifBlockToSouth([state.posX, state.posY, state.posZ])
+    ) {
+      state.posZ -= 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.forward(-1.1, true);
+    }
   };
   const handleMoveLeft = () => {
-
-    console.log(cameraControlRef.current._camera.position.x)
-    state.posX = cameraControlRef.current._camera.position.x;
-    state.posY = cameraControlRef.current._camera.position.y;
-    state.posZ = cameraControlRef.current._camera.position.z;
+    state.posX -= 1;
     state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
     cameraControlRef.current?.truck(-1, 0, true);
   };
   const handleMoveRight = () => {
+    state.posX += 1;
+    state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
     cameraControlRef.current?.truck(1, 0, true);
-        state.posX = cameraControlRef.current._camera.position.x;
-        state.posY = cameraControlRef.current._camera.position.y;
-        state.posZ = cameraControlRef.current._camera.position.z;
-        state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
   };
 
   return (
@@ -165,6 +208,16 @@ const App = () => {
         onClick={() => {
           console.log("Rotate right clicked");
           cameraControlRef.current?.rotate(DEG90, 0, true);
+          if (state.playerDir === "N") {
+            state.playerDir = "W";
+          } else if (state.playerDir === "W") {
+            state.playerDir = "S";
+          } else if (state.playerDir === "S") {
+            state.playerDir = "E";
+          } else if (state.playerDir === "E") {
+            state.playerDir = "N";
+          }
+          console.log(state.playerDir);
         }}
       >
         rotate left
@@ -173,13 +226,22 @@ const App = () => {
         onClick={() => {
           console.log("Rotate right clicked");
           cameraControlRef.current?.rotate(-DEG90, 0, true);
+          if (state.playerDir === "N") {
+            state.playerDir = "E";
+          } else if (state.playerDir === "E") {
+            state.playerDir = "S";
+          } else if (state.playerDir === "S") {
+            state.playerDir = "W";
+          } else if (state.playerDir === "W") {
+            state.playerDir = "N";
+          }
+          console.log(state.playerDir);
         }}
       >
         rotate right
       </button>
       <button onClick={updateCameraPosition}>update camera position</button>
       <Canvas ref={canvasRef} shadows shadowMap>
-        <MovingLight playerPos={playerPosition} />
         {/* <ambientLight intensity={0.01} /> */}
         <Plane
           receiveShadow
@@ -189,7 +251,10 @@ const App = () => {
         >
           <meshStandardMaterial map={earth} />
         </Plane>
-
+        <group ref={playerRef}>
+          <MovingLight playerPos={playerPosition} />
+          <CameraControl />
+        </group>
         <CameraControls ref={cameraControlRef} distance={0.01} />
         <axesHelper args={[5]} />
         <gridHelper />
