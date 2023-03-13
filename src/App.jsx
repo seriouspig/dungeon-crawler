@@ -16,22 +16,6 @@ import state from "./state";
 import maze from "./maze";
 import CameraControl from "./CameraControl";
 
-const mazeArray = [
-  [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 0, 1, 1, 0, 1, 1, 1, 0, 1],
-  [1, 0, 1, 0, 0, 9, 0, 0, 0, 1],
-  [1, 0, 0, 0, 1, 1, 0, 1, 0, 1],
-  [1, 0, 1, 0, 0, 0, 0, 1, 0, 1],
-  [1, 0, 1, 1, 1, 1, 0, 1, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 1, 0, 1],
-  [1, 0, 1, 1, 1, 1, 0, 1, 0, 1],
-  [1, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-  [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-];
-
 const MazeModel = () => {
   let arrayOfBlocks = [];
   for (let i = 0; i < maze.length; i++) {
@@ -173,14 +157,14 @@ const App = () => {
       cameraControlRef.current?.forward(-1.1, true);
     } else if (
       state.playerDir === "E" &&
-      checkifBlockToEast([state.posX, state.posY, state.posZ])
+      checkifBlockToWest([state.posX, state.posY, state.posZ])
     ) {
       state.posX -= 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
       cameraControlRef.current?.forward(-1.1, true);
     } else if (
       state.playerDir === "S" &&
-      checkifBlockToSouth([state.posX, state.posY, state.posZ])
+      checkifBlockToNorth([state.posX, state.posY, state.posZ])
     ) {
       state.posZ -= 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
@@ -299,25 +283,27 @@ const App = () => {
         rotate right
       </button>
       <button onClick={updateCameraPosition}>update camera position</button>
-      <Canvas ref={canvasRef} shadows shadowMap>
-        {/* <ambientLight intensity={0.01} /> */}
-        <Plane
-          receiveShadow
-          rotation={[Math.PI / -2, 0, 0]}
-          args={[60, 60, 1]}
-          position={[0, -0.5, 0]}
-        >
-          <meshStandardMaterial map={earth} />
-        </Plane>
-        <group ref={playerRef}>
-          <MovingLight playerPos={playerPosition} />
-          <CameraControl />
-        </group>
-        <CameraControls ref={cameraControlRef} distance={0.01} />
-        <axesHelper args={[5]} />
-        <gridHelper />
-        <MazeModel />
-      </Canvas>
+      <div className="canvas-container">
+        <Canvas ref={canvasRef} shadows shadowMap>
+          {/* <ambientLight intensity={0.01} /> */}
+          <Plane
+            receiveShadow
+            rotation={[Math.PI / -2, 0, 0]}
+            args={[60, 60, 1]}
+            position={[0, -0.5, 0]}
+          >
+            <meshStandardMaterial map={earth} />
+          </Plane>
+          <group ref={playerRef}>
+            <MovingLight playerPos={playerPosition} />
+            <CameraControl />
+          </group>
+          <CameraControls ref={cameraControlRef} distance={0.01} />
+          <axesHelper args={[5]} />
+          <gridHelper />
+          <MazeModel />
+        </Canvas>
+      </div>
     </>
   );
 };
