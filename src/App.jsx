@@ -188,14 +188,72 @@ const App = () => {
     }
   };
   const handleMoveLeft = () => {
-    state.posX -= 1;
-    state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-    cameraControlRef.current?.truck(-1, 0, true);
+    console.log(playerPosition);
+    console.log(checkifBlockToNorth(playerPosition));
+    console.log(state.playerDir);
+    if (
+      state.playerDir === "N" &&
+      checkifBlockToWest([state.posX, state.posY, state.posZ])
+    ) {
+      state.posX -= 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.truck(-1.1, 0, true);
+    } else if (
+      state.playerDir === "W" &&
+      checkifBlockToSouth([state.posX, state.posY, state.posZ])
+    ) {
+      state.posZ += 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.truck(-1.1, 0, true);
+    } else if (
+      state.playerDir === "E" &&
+      checkifBlockToNorth([state.posX, state.posY, state.posZ])
+    ) {
+      state.posZ -= 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.truck(-1.1, 0, true);
+    } else if (
+      state.playerDir === "S" &&
+      checkifBlockToSouth([state.posX, state.posY, state.posZ])
+    ) {
+      state.posX += 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.truck(-1.1, 0, true);
+    }
   };
   const handleMoveRight = () => {
-    state.posX += 1;
-    state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-    cameraControlRef.current?.truck(1, 0, true);
+    console.log(playerPosition);
+    console.log(checkifBlockToNorth(playerPosition));
+    console.log(state.playerDir);
+    if (
+      state.playerDir === "N" &&
+      checkifBlockToEast([state.posX, state.posY, state.posZ])
+    ) {
+      state.posX += 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.truck(1.1, 0, true);
+    } else if (
+      state.playerDir === "W" &&
+      checkifBlockToNorth([state.posX, state.posY, state.posZ])
+    ) {
+      state.posZ -= 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.truck(1.1, 0, true);
+    } else if (
+      state.playerDir === "E" &&
+      checkifBlockToSouth([state.posX, state.posY, state.posZ])
+    ) {
+      state.posZ += 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.truck(1.1, 0, true);
+    } else if (
+      state.playerDir === "S" &&
+      checkifBlockToWest([state.posX, state.posY, state.posZ])
+    ) {
+      state.posX -= 1;
+      state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
+      cameraControlRef.current?.truck(1.1, 0, true);
+    }
   };
 
   return (
