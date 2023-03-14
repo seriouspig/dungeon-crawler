@@ -15,6 +15,12 @@ import * as THREE from "three";
 import state from "./state";
 import maze from "./maze";
 import CameraControl from "./CameraControl";
+import arrow_up from "./img/0_arrow.png";
+import arrow_down from "./img/0_arrow.png";
+import arrow_left from "./img/0_arrow.png";
+import arrow_right from "./img/0_arrow.png";
+import arrow_turn_left from "./img/0_arrow_curved.png";
+import arrow_turn_right from "./img/0_arrow_curved.png";
 
 const MazeModel = () => {
   let arrayOfBlocks = [];
@@ -239,50 +245,38 @@ const App = () => {
       cameraControlRef.current?.truck(1.1, 0, true);
     }
   };
+  const handleRotateLeft = () => {
+    console.log("Rotate right clicked");
+    cameraControlRef.current?.rotate(DEG90, 0, true);
+    if (state.playerDir === "N") {
+      state.playerDir = "W";
+    } else if (state.playerDir === "W") {
+      state.playerDir = "S";
+    } else if (state.playerDir === "S") {
+      state.playerDir = "E";
+    } else if (state.playerDir === "E") {
+      state.playerDir = "N";
+    }
+    console.log(state.playerDir);
+  };
+
+  const handleRotateRight = () => {
+    console.log("Rotate right clicked");
+    cameraControlRef.current?.rotate(-DEG90, 0, true);
+    if (state.playerDir === "N") {
+      state.playerDir = "E";
+    } else if (state.playerDir === "E") {
+      state.playerDir = "S";
+    } else if (state.playerDir === "S") {
+      state.playerDir = "W";
+    } else if (state.playerDir === "W") {
+      state.playerDir = "N";
+    }
+    console.log(state.playerDir);
+  };
 
   return (
     <>
-      <button onClick={handleMoveForward}>move forward</button>
-      <button onClick={handleMoveBackward}>move backward</button>
-      <button onClick={handleMoveLeft}>move left</button>
-      <button onClick={handleMoveRight}>move right</button>
-      <button
-        onClick={() => {
-          console.log("Rotate right clicked");
-          cameraControlRef.current?.rotate(DEG90, 0, true);
-          if (state.playerDir === "N") {
-            state.playerDir = "W";
-          } else if (state.playerDir === "W") {
-            state.playerDir = "S";
-          } else if (state.playerDir === "S") {
-            state.playerDir = "E";
-          } else if (state.playerDir === "E") {
-            state.playerDir = "N";
-          }
-          console.log(state.playerDir);
-        }}
-      >
-        rotate left
-      </button>
-      <button
-        onClick={() => {
-          console.log("Rotate right clicked");
-          cameraControlRef.current?.rotate(-DEG90, 0, true);
-          if (state.playerDir === "N") {
-            state.playerDir = "E";
-          } else if (state.playerDir === "E") {
-            state.playerDir = "S";
-          } else if (state.playerDir === "S") {
-            state.playerDir = "W";
-          } else if (state.playerDir === "W") {
-            state.playerDir = "N";
-          }
-          console.log(state.playerDir);
-        }}
-      >
-        rotate right
-      </button>
-      <button onClick={updateCameraPosition}>update camera position</button>
       <div className="canvas-container">
         <Canvas ref={canvasRef} shadows shadowMap>
           {/* <ambientLight intensity={0.01} /> */}
@@ -299,10 +293,62 @@ const App = () => {
             <CameraControl />
           </group>
           <CameraControls ref={cameraControlRef} distance={0.01} />
-          <axesHelper args={[5]} />
-          <gridHelper />
+          {/* <axesHelper args={[5]} /> */}
+          {/* <gridHelper /> */}
           <MazeModel />
         </Canvas>
+      </div>
+      <div className="controls-container">
+        <div className="image-container">
+          <img
+            className="arrow-button turn-left"
+            onClick={handleRotateLeft}
+            src={arrow_turn_left}
+            alt=""
+          />
+        </div>
+        <div className="image-container">
+          <img
+            className="arrow-button up"
+            onClick={handleMoveForward}
+            src={arrow_up}
+            alt=""
+          />
+        </div>
+        <div className="image-container">
+          <img
+            className="arrow-button turn-right"
+            onClick={handleRotateRight}
+            src={arrow_turn_right}
+            alt=""
+          />
+        </div>
+        <div className="image-container">
+          <img
+            className="arrow-button left"
+            onClick={handleMoveLeft}
+            src={arrow_left}
+            alt=""
+          />
+        </div>
+        <div className="image-container">
+          <img
+            className="arrow-button down"
+            onClick={handleMoveBackward}
+            src={arrow_down}
+            alt=""
+          />
+        </div>
+        <div className="image-container">
+          <img
+            className="arrow-button right"
+            onClick={handleMoveRight}
+            src={arrow_right}
+            alt=""
+          />
+        </div>
+
+        {/* <button onClick={updateCameraPosition}>update camera position</button> */}
       </div>
     </>
   );
