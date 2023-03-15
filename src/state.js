@@ -10,7 +10,8 @@ const state = {
   posZ: 0,
   target: new THREE.Vector3(0, 0, 0),
   shouldUpdate: true,
-  playerDir: "N"
+  playerDir: "N",
+  queue: [],
 };
 
 export default state;

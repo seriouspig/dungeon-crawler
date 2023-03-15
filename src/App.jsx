@@ -103,44 +103,50 @@ const App = () => {
     setPlayerPosition(newPos);
     checkifBlockToNorth(newPos);
     console.log(playerDirection);
+    console.log(cameraControlRef.current);
   };
 
   useEffect(() => {
     console.log(playerPosition);
   }, [playerPosition]);
 
+  useEffect(() => {
+    console.log(cameraControlRef);
+  }, [cameraControlRef]);
+
   const handleMoveForward = () => {
     console.log(playerPosition);
     console.log(checkifBlockToNorth(playerPosition));
     console.log(state.playerDir);
+    console.log(cameraControlRef.current._hasRested);
     if (
       state.playerDir === "N" &&
       checkifBlockToNorth([state.posX, state.posY, state.posZ])
     ) {
       state.posZ -= 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.forward(1.1, true);
+      cameraControlRef.current?.forward(1, true);
     } else if (
       state.playerDir === "W" &&
       checkifBlockToWest([state.posX, state.posY, state.posZ])
     ) {
       state.posX -= 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.forward(1.1, true);
+      cameraControlRef.current?.forward(1, true);
     } else if (
       state.playerDir === "E" &&
       checkifBlockToEast([state.posX, state.posY, state.posZ])
     ) {
       state.posX += 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.forward(1.1, true);
+      cameraControlRef.current?.forward(1, true);
     } else if (
       state.playerDir === "S" &&
       checkifBlockToSouth([state.posX, state.posY, state.posZ])
     ) {
       state.posZ += 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.forward(1.1, true);
+      cameraControlRef.current?.forward(1, true);
     }
   };
   const handleMoveBackward = () => {
@@ -153,28 +159,28 @@ const App = () => {
     ) {
       state.posZ += 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.forward(-1.1, true);
+      cameraControlRef.current?.forward(-1, true);
     } else if (
       state.playerDir === "W" &&
       checkifBlockToEast([state.posX, state.posY, state.posZ])
     ) {
       state.posX += 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.forward(-1.1, true);
+      cameraControlRef.current?.forward(-1, true);
     } else if (
       state.playerDir === "E" &&
       checkifBlockToWest([state.posX, state.posY, state.posZ])
     ) {
       state.posX -= 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.forward(-1.1, true);
+      cameraControlRef.current?.forward(-1, true);
     } else if (
       state.playerDir === "S" &&
       checkifBlockToNorth([state.posX, state.posY, state.posZ])
     ) {
       state.posZ -= 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.forward(-1.1, true);
+      cameraControlRef.current?.forward(-1, true);
     }
   };
   const handleMoveLeft = () => {
@@ -187,28 +193,28 @@ const App = () => {
     ) {
       state.posX -= 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.truck(-1.1, 0, true);
+      cameraControlRef.current?.truck(-1, 0, true);
     } else if (
       state.playerDir === "W" &&
       checkifBlockToSouth([state.posX, state.posY, state.posZ])
     ) {
       state.posZ += 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.truck(-1.1, 0, true);
+      cameraControlRef.current?.truck(-1, 0, true);
     } else if (
       state.playerDir === "E" &&
       checkifBlockToNorth([state.posX, state.posY, state.posZ])
     ) {
       state.posZ -= 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.truck(-1.1, 0, true);
+      cameraControlRef.current?.truck(-1, 0, true);
     } else if (
       state.playerDir === "S" &&
       checkifBlockToSouth([state.posX, state.posY, state.posZ])
     ) {
       state.posX += 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.truck(-1.1, 0, true);
+      cameraControlRef.current?.truck(-1, 0, true);
     }
   };
   const handleMoveRight = () => {
@@ -221,58 +227,63 @@ const App = () => {
     ) {
       state.posX += 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.truck(1.1, 0, true);
+      cameraControlRef.current?.truck(1, 0, true);
     } else if (
       state.playerDir === "W" &&
       checkifBlockToNorth([state.posX, state.posY, state.posZ])
     ) {
       state.posZ -= 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.truck(1.1, 0, true);
+      cameraControlRef.current?.truck(1, 0, true);
     } else if (
       state.playerDir === "E" &&
       checkifBlockToSouth([state.posX, state.posY, state.posZ])
     ) {
       state.posZ += 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.truck(1.1, 0, true);
+      cameraControlRef.current?.truck(1, 0, true);
     } else if (
       state.playerDir === "S" &&
       checkifBlockToWest([state.posX, state.posY, state.posZ])
     ) {
       state.posX -= 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
-      cameraControlRef.current?.truck(1.1, 0, true);
+      cameraControlRef.current?.truck(1, 0, true);
     }
   };
   const handleRotateLeft = () => {
     console.log("Rotate right clicked");
-    cameraControlRef.current?.rotate(DEG90, 0, true);
-    if (state.playerDir === "N") {
-      state.playerDir = "W";
-    } else if (state.playerDir === "W") {
-      state.playerDir = "S";
-    } else if (state.playerDir === "S") {
-      state.playerDir = "E";
-    } else if (state.playerDir === "E") {
-      state.playerDir = "N";
+    if (cameraControlRef.current._hasRested) {
+      cameraControlRef.current?.rotate(DEG90, 0, true);
+
+      if (state.playerDir === "N") {
+        state.playerDir = "W";
+      } else if (state.playerDir === "W") {
+        state.playerDir = "S";
+      } else if (state.playerDir === "S") {
+        state.playerDir = "E";
+      } else if (state.playerDir === "E") {
+        state.playerDir = "N";
+      }
+      console.log(state.playerDir);
     }
-    console.log(state.playerDir);
   };
 
   const handleRotateRight = () => {
     console.log("Rotate right clicked");
-    cameraControlRef.current?.rotate(-DEG90, 0, true);
-    if (state.playerDir === "N") {
-      state.playerDir = "E";
-    } else if (state.playerDir === "E") {
-      state.playerDir = "S";
-    } else if (state.playerDir === "S") {
-      state.playerDir = "W";
-    } else if (state.playerDir === "W") {
-      state.playerDir = "N";
+    if (cameraControlRef.current._hasRested) {
+      cameraControlRef.current?.rotate(-DEG90, 0, true);
+      if (state.playerDir === "N") {
+        state.playerDir = "E";
+      } else if (state.playerDir === "E") {
+        state.playerDir = "S";
+      } else if (state.playerDir === "S") {
+        state.playerDir = "W";
+      } else if (state.playerDir === "W") {
+        state.playerDir = "N";
+      }
+      console.log(state.playerDir);
     }
-    console.log(state.playerDir);
   };
 
   return (
@@ -290,7 +301,6 @@ const App = () => {
           </Plane>
           <group ref={playerRef}>
             <MovingLight playerPos={playerPosition} />
-            <CameraControl />
           </group>
           <CameraControls ref={cameraControlRef} distance={0.01} />
           {/* <axesHelper args={[5]} /> */}
@@ -301,6 +311,7 @@ const App = () => {
       <div className="controls-container">
         <div className="image-container">
           <img
+            draggable={false}
             className="arrow-button turn-left"
             onClick={handleRotateLeft}
             src={arrow_turn_left}
@@ -309,6 +320,7 @@ const App = () => {
         </div>
         <div className="image-container">
           <img
+            draggable={false}
             className="arrow-button up"
             onClick={handleMoveForward}
             src={arrow_up}
@@ -317,6 +329,7 @@ const App = () => {
         </div>
         <div className="image-container">
           <img
+            draggable={false}
             className="arrow-button turn-right"
             onClick={handleRotateRight}
             src={arrow_turn_right}
@@ -325,6 +338,7 @@ const App = () => {
         </div>
         <div className="image-container">
           <img
+            draggable={false}
             className="arrow-button left"
             onClick={handleMoveLeft}
             src={arrow_left}
@@ -333,6 +347,7 @@ const App = () => {
         </div>
         <div className="image-container">
           <img
+            draggable={false}
             className="arrow-button down"
             onClick={handleMoveBackward}
             src={arrow_down}
@@ -341,6 +356,7 @@ const App = () => {
         </div>
         <div className="image-container">
           <img
+            draggable={false}
             className="arrow-button right"
             onClick={handleMoveRight}
             src={arrow_right}
@@ -348,7 +364,7 @@ const App = () => {
           />
         </div>
 
-        {/* <button onClick={updateCameraPosition}>update camera position</button> */}
+        <button onClick={updateCameraPosition}>update camera position</button>
       </div>
     </>
   );
