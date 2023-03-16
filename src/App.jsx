@@ -21,6 +21,7 @@ import arrow_left from "./img/0_arrow.png";
 import arrow_right from "./img/0_arrow.png";
 import arrow_turn_left from "./img/0_arrow_curved.png";
 import arrow_turn_right from "./img/0_arrow_curved.png";
+import { NONE } from "phaser";
 
 const MazeModel = () => {
   let arrayOfBlocks = [];
@@ -349,6 +350,7 @@ const App = () => {
             distance={0.01}
             truckSpeed={0.5}
             smoothTime={0.1}
+            mouseButtons={NONE}
           />
           {/* <axesHelper args={[5]} /> */}
           {/* <gridHelper /> */}
