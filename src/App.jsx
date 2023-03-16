@@ -21,6 +21,7 @@ import arrow_left from "./img/0_arrow.png";
 import arrow_right from "./img/0_arrow.png";
 import arrow_turn_left from "./img/0_arrow_curved.png";
 import arrow_turn_right from "./img/0_arrow_curved.png";
+import Model from "./Model";
 
 
 const MazeModel = () => {
@@ -332,8 +333,16 @@ const App = () => {
   return (
     <>
       <div className="canvas-container">
-        <Canvas ref={canvasRef} shadows shadowMap>
+        <Canvas ref={canvasRef} shadows>
           {/* <ambientLight intensity={0.01} /> */}
+          <Suspense fallback={null}>
+            <Model
+              path="/gobelin_monster/scene.gltf"
+              scale={new Array(3).fill(0.005)}
+              position={[-4, -0.5, -2]}
+              rotation={[0, Math.PI / 2, 0]}
+            />
+          </Suspense>
           <Plane
             receiveShadow
             rotation={[Math.PI / -2, 0, 0]}
@@ -350,7 +359,7 @@ const App = () => {
             distance={0.01}
             truckSpeed={0.5}
             smoothTime={0.1}
-            mouseButtons={"NONE"}
+            // mouseButtons={"NONE"}
             touches={"NONE"}
           />
           {/* <axesHelper args={[5]} /> */}
