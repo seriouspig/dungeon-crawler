@@ -351,6 +351,7 @@ const App = () => {
             truckSpeed={0.5}
             smoothTime={0.1}
             mouseButtons={"NONE"}
+            touches={"NONE"}
           />
           {/* <axesHelper args={[5]} /> */}
           {/* <gridHelper /> */}
