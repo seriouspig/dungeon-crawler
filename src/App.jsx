@@ -211,7 +211,7 @@ const App = () => {
       cameraControlRef.current?.truck(-1, 0, true);
     } else if (
       state.playerDir === "S" &&
-      checkifBlockToSouth([state.posX, state.posY, state.posZ])
+      checkifBlockToEast([state.posX, state.posY, state.posZ])
     ) {
       state.posX += 1;
       state.target = new THREE.Vector3(state.posX, state.posY, state.posZ);
