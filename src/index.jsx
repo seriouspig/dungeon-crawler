@@ -8,8 +8,8 @@ import App5 from "./App5";
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+
+    <App />,
+
   rootElement
 );

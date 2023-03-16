@@ -63,6 +63,7 @@ const App = () => {
 
   const [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
   const [playerDirection, setPlayerDirection] = useState("N");
+  const [moveQueue, setMoveQueue] = useState([]);
   const directions = ["N", "E", "S", "W"];
 
   const checkifBlockToNorth = (currentPos) => {
@@ -286,6 +287,47 @@ const App = () => {
     }
   };
 
+  const executeQueue = () => {
+    if (cameraControlRef.current._hasRested) {
+      if (state.queue[0] === "left") {
+        console.log("moving left");
+        handleMoveLeft();
+      } else if (state.queue[0] === "right") {
+        console.log("moving right");
+        handleMoveRight();
+      } else if (state.queue[0] === "forward") {
+        console.log("moving forward");
+        handleMoveForward();
+      } else if (state.queue[0] === "backward") {
+        console.log("moving backward");
+        handleMoveBackward();
+      } else if (state.queue[0] === "turnRight") {
+        console.log("turning right");
+        handleRotateRight();
+      } else if (state.queue[0] === "turnLeft") {
+        console.log("turning left");
+        handleRotateLeft();
+      }
+      state.queue.shift();
+
+      setTimeout(function () {
+        if (state.queue.length > 0) {
+          console.log("Executed after 1 second");
+          executeQueue();
+        }
+      }, 400);
+    } else {
+      console.log("Camera still moving");
+    }
+  };
+
+  const handlePushToQueue = (movement) => {
+    state.queue.push(movement);
+    if (state.queue.length > 0) {
+      executeQueue();
+    }
+  };
+
   return (
     <>
       <div className="canvas-container">
@@ -302,7 +344,12 @@ const App = () => {
           <group ref={playerRef}>
             <MovingLight playerPos={playerPosition} />
           </group>
-          <CameraControls ref={cameraControlRef} distance={0.01} />
+          <CameraControls
+            ref={cameraControlRef}
+            distance={0.01}
+            truckSpeed={0.5}
+            smoothTime={0.1}
+          />
           {/* <axesHelper args={[5]} /> */}
           {/* <gridHelper /> */}
           <MazeModel />
@@ -313,7 +360,7 @@ const App = () => {
           <img
             draggable={false}
             className="arrow-button turn-left"
-            onClick={handleRotateLeft}
+            onClick={() => handlePushToQueue("turnLeft")}
             src={arrow_turn_left}
             alt=""
           />
@@ -322,7 +369,7 @@ const App = () => {
           <img
             draggable={false}
             className="arrow-button up"
-            onClick={handleMoveForward}
+            onClick={() => handlePushToQueue("forward")}
             src={arrow_up}
             alt=""
           />
@@ -331,7 +378,7 @@ const App = () => {
           <img
             draggable={false}
             className="arrow-button turn-right"
-            onClick={handleRotateRight}
+            onClick={() => handlePushToQueue("turnRight")}
             src={arrow_turn_right}
             alt=""
           />
@@ -340,7 +387,7 @@ const App = () => {
           <img
             draggable={false}
             className="arrow-button left"
-            onClick={handleMoveLeft}
+            onClick={() => handlePushToQueue("left")}
             src={arrow_left}
             alt=""
           />
@@ -349,7 +396,7 @@ const App = () => {
           <img
             draggable={false}
             className="arrow-button down"
-            onClick={handleMoveBackward}
+            onClick={() => handlePushToQueue("backward")}
             src={arrow_down}
             alt=""
           />
@@ -358,7 +405,7 @@ const App = () => {
           <img
             draggable={false}
             className="arrow-button right"
-            onClick={handleMoveRight}
+            onClick={() => handlePushToQueue("right")}
             src={arrow_right}
             alt=""
           />
