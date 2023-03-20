@@ -337,8 +337,8 @@ const App = () => {
           {/* <ambientLight intensity={0.01} /> */}
           <Suspense fallback={null}>
             <Model
-              path="/gobelin_monster/scene.gltf"
-              scale={new Array(3).fill(0.005)}
+              path="/zombie/scene.gltf"
+              scale={new Array(3).fill(0.25)}
               position={[-4, -0.5, -2]}
               rotation={[0, Math.PI / 2, 0]}
             />
