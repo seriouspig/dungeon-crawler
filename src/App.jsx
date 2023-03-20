@@ -343,6 +343,29 @@ const App = () => {
     state.enemyPos = new THREE.Vector3(newX, -0.5, newZ);
   }
 
+  let counter = 0
+  let direction = "right"
+
+  setInterval(() => {
+    if (counter === 0) {
+      direction = "right"
+      state.enemyRotation = [0, Math.PI / 2, 0];
+    } else if (counter === state.enemyPath.length - 1) {
+      direction = "left"
+      state.enemyRotation = [0, - Math.PI / 2, 0];
+    }
+    if (direction === "right") {
+      counter++;
+      state.enemyPos = state.enemyPath[counter];
+      console.log(state.enemyPos)
+    } else if (direction === "left") {
+      counter--;
+      state.enemyPos = state.enemyPath[counter];
+    }
+    
+    
+  }, 1000)
+
   return (
     <>
       <div className="canvas-container">
@@ -354,7 +377,7 @@ const App = () => {
               path="/zombie/scene.gltf"
               scale={new Array(3).fill(0.2)}
               position={state.enemyPos}
-              rotation={[0, Math.PI / 2, 0]}
+              rotation={state.enemyRotation}
             />
           </Suspense>
           <Plane

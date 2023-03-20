@@ -24,9 +24,12 @@ const Model = forwardRef((props, ref) => {
     } )
   }
 
+  console.log(model.scene.rotation.y)
+
   useFrame((scene, delta) => {
     mixer?.update(delta)
     model.scene.position.lerp(state.enemyPos, 0.1);
+    model.scene.rotation.y = state.enemyRotation[1]
   })
 
   model.scene.traverse(child => {
