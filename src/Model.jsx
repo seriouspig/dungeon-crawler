@@ -1,10 +1,13 @@
 import { useLoader, useFrame } from "@react-three/fiber";
 import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import * as THREE from 'three'
+import { forwardRef } from "react";
 import { useTexture } from "@react-three/drei";
 import { AnimationMixer } from "three";
+import state from "./state";
 
-const Model = (props) => {
+
+const Model = forwardRef((props, ref) => {
   const model = useLoader(GLTFLoader, props.path);
   console.log(model);
   var newMaterial = new THREE.MeshStandardMaterial(Map);
@@ -23,6 +26,7 @@ const Model = (props) => {
 
   useFrame((scene, delta) => {
     mixer?.update(delta)
+    model.scene.position.lerp(state.enemyPos, 0.1);
   })
 
   model.scene.traverse(child => {
@@ -36,7 +40,7 @@ const Model = (props) => {
       }
   })
 
-  return <primitive object={model.scene} {...props} />;
-};
+  return <primitive object={model.scene} {...props} ref={ref}/>;
+});
 
 export default Model;

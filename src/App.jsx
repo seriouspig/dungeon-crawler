@@ -6,7 +6,7 @@ import {
   Plane,
   usePerformanceMonitor,
 } from "@react-three/drei";
-import { Suspense, useState, useRef, useEffect } from "react";
+import { Suspense, useState, useRef, useEffect, forwardRef } from "react";
 import Box3 from "./Box3";
 import { useTexture } from "@react-three/drei";
 import { TextureLoader } from "three";
@@ -62,6 +62,8 @@ const App = () => {
   const canvasRef = useRef(null);
 
   const playerRef = useRef(null);
+
+  const monsterRef = useRef(null);
 
   const [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
   const [playerDirection, setPlayerDirection] = useState("N");
@@ -330,6 +332,17 @@ const App = () => {
     }
   };
 
+  const handleMoveMonsterForward = () => {
+    console.log("Monster moving forward")
+    console.log(monsterRef)
+    console.log(monsterRef.current.position)
+    console.log(state.target.x)
+    const newX = state.target.x
+    const newY = state.target.y
+    const newZ = state.target.z
+    state.enemyPos = new THREE.Vector3(newX, -0.5, newZ);
+  }
+
   return (
     <>
       <div className="canvas-container">
@@ -337,9 +350,10 @@ const App = () => {
           {/* <ambientLight intensity={0.01} /> */}
           <Suspense fallback={null}>
             <Model
+              ref={monsterRef}
               path="/zombie/scene.gltf"
-              scale={new Array(3).fill(0.25)}
-              position={[-4, -0.5, -2]}
+              scale={new Array(3).fill(0.2)}
+              position={state.enemyPos}
               rotation={[0, Math.PI / 2, 0]}
             />
           </Suspense>
@@ -422,7 +436,7 @@ const App = () => {
             alt=""
           />
         </div>
-
+        <button onClick={handleMoveMonsterForward}>Move monster forward</button>
         <button onClick={updateCameraPosition}>update camera position</button>
       </div>
     </>

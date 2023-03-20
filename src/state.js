@@ -12,6 +12,8 @@ const state = {
   shouldUpdate: true,
   playerDir: "N",
   queue: [],
+
+  enemyPos: new THREE.Vector3(-4, -0.5, -2),
 };
 
 export default state;
