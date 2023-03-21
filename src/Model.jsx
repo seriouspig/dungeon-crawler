@@ -28,7 +28,7 @@ const Model = forwardRef((props, ref) => {
 
   useFrame((scene, delta) => {
     mixer?.update(delta)
-    model.scene.position.lerp(state.enemyPos, 0.1);
+    model.scene.position.lerp(new THREE.Vector3(state.enemyPos[0], state.enemyPos[1], state.enemyPos[2]), 0.1);
     model.scene.rotation.y = state.enemyRotation[1]
   })
 

@@ -53,9 +53,11 @@ const MovingRedLight = (props) => {
   const [pp, setPp] = useState(props.playerPos);
   const redlight = useRef();
 
+
   useFrame(({ camera, scene }) => {
     if (state.shouldUpdate) {
-      redlight.current.position.lerp(state.enemyPos, 0.1);
+      // redlight.current.position.lerp(state.enemyPos, 0.1);
+      redlight.current.position.lerp(new THREE.Vector3(state.enemyPos[0], 0, state.enemyPos[2]), 0.1);
     }
   });
 
@@ -64,7 +66,7 @@ const MovingRedLight = (props) => {
       ref={redlight}
       intensity={2}
       castShadow
-      distance={3}
+      distance={5}
       color={"#ff0000"}
     />
   );
