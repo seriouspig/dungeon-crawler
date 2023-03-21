@@ -49,6 +49,27 @@ const MovingLight = (props) => {
   return <pointLight ref={light} intensity={2} castShadow distance={3} />;
 };
 
+const MovingRedLight = (props) => {
+  const [pp, setPp] = useState(props.playerPos);
+  const redlight = useRef();
+
+  useFrame(({ camera, scene }) => {
+    if (state.shouldUpdate) {
+      redlight.current.position.lerp(state.enemyPos, 0.1);
+    }
+  });
+
+  return (
+    <pointLight
+      ref={redlight}
+      intensity={2}
+      castShadow
+      distance={3}
+      color={"#ff0000"}
+    />
+  );
+};
+
 const App = () => {
   const earth = new TextureLoader().load("textures/floor.jpg");
   earth.wrapS = THREE.RepeatWrapping;
@@ -380,6 +401,7 @@ const App = () => {
               rotation={state.enemyRotation}
             />
           </Suspense>
+          <MovingRedLight   />
           <Plane
             receiveShadow
             rotation={[Math.PI / -2, 0, 0]}
