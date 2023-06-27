@@ -21,6 +21,7 @@ import arrow_left from "./img/0_arrow.png";
 import arrow_right from "./img/0_arrow.png";
 import arrow_turn_left from "./img/0_arrow_curved.png";
 import arrow_turn_right from "./img/0_arrow_curved.png";
+import jumpscare_img from "./img/monster_1.gif"
 import Model from "./Model";
 
 const MazeModel = () => {
@@ -92,7 +93,8 @@ const App = () => {
   const [playerPosition, setPlayerPosition] = useState([0, 0, 0]);
   const [playerDirection, setPlayerDirection] = useState("N");
   const [moveQueue, setMoveQueue] = useState([]);
-  const directions = ["N", "E", "S", "W"];
+  const [jumpscare, setJumpscare] = useState(false);
+  let directions = ["N", "E", "S", "W"];
 
   const checkifBlockToNorth = (currentPos) => {
     const wallToNorth = maze[currentPos[2] - 1 + 5][currentPos[0] + 5];
@@ -380,23 +382,26 @@ const App = () => {
   // MONSTER MOVEMENT OLD
   setInterval(() => {
     moveEnemy();
-    // console.log(state.enemyRotation[1] * (180 / Math.PI));
-    // if (counter === 0) {
-    //   direction = "right"
-    //   state.enemyRotation = [0, enemyE , 0];
-    // } else if (counter === state.enemyPath.length - 1) {
-    //   direction = "left"
-    //   state.enemyRotation = [0, enemyW , 0];
-    // }
-    // if (direction === "right") {
-    //   counter++;
-    //   state.enemyPos = state.enemyPath[counter];
-    //   console.log(state.enemyPos)
-    // } else if (direction === "left") {
-    //   counter--;
-    //   state.enemyPos = state.enemyPath[counter];
+    // console.log("ENEMY POSITION: " + state.enemyPos);
+    // console.log("PLAYER POSITION: " + [state.posX, state.posY, state.posZ]);
+    // if (state.enemyPos[0] === state.posX && state.enemyPos[2] === state.posZ) {
+    //   console.log("JUUUUUUUUMMMMMMMPPPSCCCAAAAAAREEEEEEEEE !!!!");
+    //   setJumpscare(true);
     // }
   }, 1000);
+
+    setInterval(() => {
+
+      console.log("ENEMY POSITION: " + state.enemyPos);
+      console.log("PLAYER POSITION: " + [state.posX, state.posY, state.posZ]);
+      if (
+        state.enemyPos[0] === state.posX &&
+        state.enemyPos[2] === state.posZ
+      ) {
+        console.log("JUUUUUUUUMMMMMMMPPPSCCCAAAAAAREEEEEEEEE !!!!");
+        setJumpscare(true);
+      }
+    }, 200);
 
   // MONSTER MOVEMENT NEW
   const moveEnemy = () => {
@@ -449,7 +454,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyE, enemyS];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         console.log("------------------------");
         if (direction === enemyE) {
@@ -476,7 +481,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyE, enemyN];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         if (direction === enemyE) {
           state.enemyPos = [
@@ -502,7 +507,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyS, enemyN];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         if (direction === enemyS) {
           state.enemyPos = [
@@ -570,7 +575,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyE, enemyS];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         console.log("------------------------");
         if (direction === enemyE) {
@@ -597,7 +602,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyW, enemyS];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         if (direction === enemyW) {
           state.enemyPos = [
@@ -623,7 +628,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyE, enemyW];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         if (direction === enemyE) {
           state.enemyPos = [
@@ -691,7 +696,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyW, enemyS];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         console.log("------------------------");
         if (direction === enemyW) {
@@ -718,7 +723,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyW, enemyN];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         if (direction === enemyW) {
           state.enemyPos = [
@@ -744,7 +749,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyS, enemyN];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         if (direction === enemyS) {
           state.enemyPos = [
@@ -812,7 +817,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyE, enemyN];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         console.log("------------------------");
         if (direction === enemyE) {
@@ -839,7 +844,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyW, enemyN];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         if (direction === enemyW) {
           state.enemyPos = [
@@ -865,7 +870,7 @@ const App = () => {
         console.log("Doing 50% random choice");
         const array = [enemyE, enemyW];
         const randomIndex = Math.floor(Math.random() * array.length);
-        const direction = array[randomIndex];
+        let direction = array[randomIndex];
         state.enemyRotation = [0, direction, 0];
         if (direction === enemyE) {
           state.enemyPos = [
@@ -888,101 +893,109 @@ const App = () => {
 
   return (
     <>
-      <div className="canvas-container">
-        <Canvas ref={canvasRef} shadows>
-          {/* <ambientLight intensity={0.01} /> */}
-          <Suspense fallback={null}>
-            <Model
-              ref={monsterRef}
-              path="/zombie/scene.gltf"
-              scale={new Array(3).fill(0.2)}
-              position={state.enemyPos}
-              rotation={state.enemyRotation}
+      {jumpscare ? (
+        <div className="jumpscare" onClick={() => window.location.reload()}>
+          <img draggable={false} src={jumpscare_img} alt="" />
+        </div>
+      ) : (
+        <div className="canvas-container">
+          <Canvas ref={canvasRef} shadows>
+            {/* <ambientLight intensity={0.01} /> */}
+            <Suspense fallback={null}>
+              <Model
+                ref={monsterRef}
+                path="/zombie/scene.gltf"
+                scale={new Array(3).fill(0.2)}
+                position={state.enemyPos}
+                rotation={state.enemyRotation}
+              />
+            </Suspense>
+            <MovingRedLight />
+            <Plane
+              receiveShadow
+              rotation={[Math.PI / -2, 0, 0]}
+              args={[60, 60, 1]}
+              position={[0, -0.5, 0]}
+            >
+              <meshStandardMaterial map={earth} />
+            </Plane>
+            <group ref={playerRef}>
+              <MovingLight playerPos={playerPosition} />
+            </group>
+            <CameraControls
+              ref={cameraControlRef}
+              distance={0.01}
+              truckSpeed={0.5}
+              smoothTime={0.1}
+              // mouseButtons={"NONE"}
+              touches={"NONE"}
             />
-          </Suspense>
-          <MovingRedLight />
-          <Plane
-            receiveShadow
-            rotation={[Math.PI / -2, 0, 0]}
-            args={[60, 60, 1]}
-            position={[0, -0.5, 0]}
-          >
-            <meshStandardMaterial map={earth} />
-          </Plane>
-          <group ref={playerRef}>
-            <MovingLight playerPos={playerPosition} />
-          </group>
-          <CameraControls
-            ref={cameraControlRef}
-            distance={0.01}
-            truckSpeed={0.5}
-            smoothTime={0.1}
-            // mouseButtons={"NONE"}
-            touches={"NONE"}
-          />
-          {/* <axesHelper args={[5]} /> */}
-          {/* <gridHelper /> */}
-          <MazeModel />
-        </Canvas>
-      </div>
-      <div className="controls-container">
-        <div className="image-container">
-          <img
-            draggable={false}
-            className="arrow-button turn-left"
-            onClick={() => handlePushToQueue("turnLeft")}
-            src={arrow_turn_left}
-            alt=""
-          />
+            {/* <axesHelper args={[5]} /> */}
+            {/* <gridHelper /> */}
+            <MazeModel />
+          </Canvas>
         </div>
-        <div className="image-container">
-          <img
-            draggable={false}
-            className="arrow-button up"
-            onClick={() => handlePushToQueue("forward")}
-            src={arrow_up}
-            alt=""
-          />
+      )}
+      {!jumpscare && (
+        <div className="controls-container">
+          <div className="image-container">
+            <img
+              draggable={false}
+              className="arrow-button turn-left"
+              onClick={() => handlePushToQueue("turnLeft")}
+              src={arrow_turn_left}
+              alt=""
+            />
+          </div>
+          <div className="image-container">
+            <img
+              draggable={false}
+              className="arrow-button up"
+              onClick={() => handlePushToQueue("forward")}
+              src={arrow_up}
+              alt=""
+            />
+          </div>
+          <div className="image-container">
+            <img
+              draggable={false}
+              className="arrow-button turn-right"
+              onClick={() => handlePushToQueue("turnRight")}
+              src={arrow_turn_right}
+              alt=""
+            />
+          </div>
+          <div className="image-container">
+            <img
+              draggable={false}
+              className="arrow-button left"
+              onClick={() => handlePushToQueue("left")}
+              src={arrow_left}
+              alt=""
+            />
+          </div>
+          <div className="image-container">
+            <img
+              draggable={false}
+              className="arrow-button down"
+              onClick={() => handlePushToQueue("backward")}
+              src={arrow_down}
+              alt=""
+            />
+          </div>
+          <div className="image-container">
+            <img
+              draggable={false}
+              className="arrow-button right"
+              onClick={() => handlePushToQueue("right")}
+              src={arrow_right}
+              alt=""
+            />
+          </div>
+          {/* <button onClick={handleMoveMonsterForward}>Move monster forward</button>
+        <button onClick={updateCameraPosition}>update camera position</button> */}
         </div>
-        <div className="image-container">
-          <img
-            draggable={false}
-            className="arrow-button turn-right"
-            onClick={() => handlePushToQueue("turnRight")}
-            src={arrow_turn_right}
-            alt=""
-          />
-        </div>
-        <div className="image-container">
-          <img
-            draggable={false}
-            className="arrow-button left"
-            onClick={() => handlePushToQueue("left")}
-            src={arrow_left}
-            alt=""
-          />
-        </div>
-        <div className="image-container">
-          <img
-            draggable={false}
-            className="arrow-button down"
-            onClick={() => handlePushToQueue("backward")}
-            src={arrow_down}
-            alt=""
-          />
-        </div>
-        <div className="image-container">
-          <img
-            draggable={false}
-            className="arrow-button right"
-            onClick={() => handlePushToQueue("right")}
-            src={arrow_right}
-            alt=""
-          />
-        </div>
-        <button onClick={handleMoveMonsterForward}>Move monster forward</button>
-        <button onClick={updateCameraPosition}>update camera position</button>
-      </div>
+      )}
     </>
   );
 };
