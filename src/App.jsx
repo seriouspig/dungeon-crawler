@@ -23,7 +23,6 @@ import arrow_turn_left from "./img/0_arrow_curved.png";
 import arrow_turn_right from "./img/0_arrow_curved.png";
 import Model from "./Model";
 
-
 const MazeModel = () => {
   let arrayOfBlocks = [];
   for (let i = 0; i < maze.length; i++) {
@@ -53,11 +52,13 @@ const MovingRedLight = (props) => {
   const [pp, setPp] = useState(props.playerPos);
   const redlight = useRef();
 
-
   useFrame(({ camera, scene }) => {
     if (state.shouldUpdate) {
       // redlight.current.position.lerp(state.enemyPos, 0.1);
-      redlight.current.position.lerp(new THREE.Vector3(state.enemyPos[0], 0, state.enemyPos[2]), 0.1);
+      redlight.current.position.lerp(
+        new THREE.Vector3(state.enemyPos[0], 0, state.enemyPos[2]),
+        0.1
+      );
     }
   });
 
@@ -356,29 +357,29 @@ const App = () => {
   };
 
   const handleMoveMonsterForward = () => {
-    console.log("Monster moving forward")
-    console.log(monsterRef)
-    console.log(monsterRef.current.position)
-    console.log(state.target.x)
-    const newX = state.target.x
-    const newY = state.target.y
-    const newZ = state.target.z
+    console.log("Monster moving forward");
+    console.log(monsterRef);
+    console.log(monsterRef.current.position);
+    console.log(state.target.x);
+    const newX = state.target.x;
+    const newY = state.target.y;
+    const newZ = state.target.z;
     state.enemyPos = new THREE.Vector3(newX, -0.5, newZ);
-  }
+  };
 
-  let counter = 0
-  let direction = "right"
+  let counter = 0;
+  let direction = "right";
 
-  let enemyN = Math.PI
+  let enemyN = Math.PI;
   let enemyS = 2 * Math.PI;
   let enemyE = Math.PI / 2;
-  let enemyW = - Math.PI / 2;
+  let enemyW = -Math.PI / 2;
 
   state.enemyRotation[1] === enemyE;
 
   // MONSTER MOVEMENT OLD
   setInterval(() => {
-    moveEnemy()
+    moveEnemy();
     // console.log(state.enemyRotation[1] * (180 / Math.PI));
     // if (counter === 0) {
     //   direction = "right"
@@ -395,14 +396,18 @@ const App = () => {
     //   counter--;
     //   state.enemyPos = state.enemyPath[counter];
     // }
-        
-  }, 1000)
+  }, 1000);
 
   // MONSTER MOVEMENT NEW
   const moveEnemy = () => {
+    // -------------------- MOVING EAST -----------------------
     if (state.enemyRotation[1] === enemyE) {
       direction = "east";
-      if (maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0) {
+      if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 1
+      ) {
         console.log("Moving Forward");
         state.enemyPos = [
           state.enemyPos[0] + 1,
@@ -434,9 +439,96 @@ const App = () => {
         state.enemyRotation = [0, enemyN, 0];
         direction = "north";
       }
-    } else if (state.enemyRotation[1] === enemyS) {
+      // -------- RANDOM CHOICES --------
+      else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyE, enemyS];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        console.log("------------------------");
+        if (direction === enemyE) {
+          state.enemyPos = [
+            state.enemyPos[0] + 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "east";
+        } else if (direction === enemyS) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] + 1,
+          ];
+          direction = "south";
+        }
+      } else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 1
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyE, enemyN];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        if (direction === enemyE) {
+          state.enemyPos = [
+            state.enemyPos[0] + 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "east";
+        } else if (direction === enemyN) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] - 1,
+          ];
+          direction = "north";
+        }
+      } else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyS, enemyN];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        if (direction === enemyS) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] + 1,
+          ];
+          direction = "southt";
+        } else if (direction === enemyN) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] - 1,
+          ];
+          direction = "north";
+        }
+      }
+    }
+    // -------------------- MOVING SOUTH -----------------------
+    else if (state.enemyRotation[1] === enemyS) {
       direction = "south";
-      if (maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0) {
+      if (
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 1
+      ) {
         console.log("Moving Forward");
         state.enemyPos = [
           state.enemyPos[0],
@@ -468,9 +560,96 @@ const App = () => {
         state.enemyRotation = [0, enemyE, 0];
         direction = "east";
       }
-    } else if (state.enemyRotation[1] === enemyW) {
+      // -------- RANDOM CHOICES --------
+      else if (
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 1
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyE, enemyS];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        console.log("------------------------");
+        if (direction === enemyE) {
+          state.enemyPos = [
+            state.enemyPos[0] + 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "east";
+        } else if (direction === enemyS) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] + 1,
+          ];
+          direction = "south";
+        }
+      } else if (
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyW, enemyS];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        if (direction === enemyW) {
+          state.enemyPos = [
+            state.enemyPos[0] - 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "west";
+        } else if (direction === enemyS) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] + 1,
+          ];
+          direction = "south";
+        }
+      } else if (
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyE, enemyW];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        if (direction === enemyE) {
+          state.enemyPos = [
+            state.enemyPos[0] + 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "east";
+        } else if (direction === enemyW) {
+          state.enemyPos = [
+            state.enemyPos[0] - 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "west";
+        }
+      }
+    }
+    // -------------------- MOVING WEST -----------------------
+    else if (state.enemyRotation[1] === enemyW) {
       direction = "west";
-      if (maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0) {
+      if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 1
+      ) {
         console.log("Moving Forward");
         state.enemyPos = [
           state.enemyPos[0] - 1,
@@ -502,9 +681,96 @@ const App = () => {
         state.enemyRotation = [0, enemyS, 0];
         direction = "south";
       }
-    } else if (state.enemyRotation[1] === enemyN) {
+      // -------- RANDOM CHOICES --------
+      else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyW, enemyS];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        console.log("------------------------");
+        if (direction === enemyW) {
+          state.enemyPos = [
+            state.enemyPos[0] - 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "west";
+        } else if (direction === enemyS) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] + 1,
+          ];
+          direction = "south";
+        }
+      } else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 1
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyW, enemyN];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        if (direction === enemyW) {
+          state.enemyPos = [
+            state.enemyPos[0] - 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "west";
+        } else if (direction === enemyN) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] - 1,
+          ];
+          direction = "north";
+        }
+      } else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyS, enemyN];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        if (direction === enemyS) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] + 1,
+          ];
+          direction = "southt";
+        } else if (direction === enemyN) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] - 1,
+          ];
+          direction = "north";
+        }
+      }
+    }
+    // -------------------- MOVING NORTH -----------------------
+    else if (state.enemyRotation[1] === enemyN) {
       direction = "west";
-      if (maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 0) {
+      if (
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 1
+      ) {
         console.log("Moving Forward");
         state.enemyPos = [
           state.enemyPos[0],
@@ -536,9 +802,89 @@ const App = () => {
         state.enemyRotation = [0, enemyE, 0];
         direction = "south";
       }
+      // -------- RANDOM CHOICES --------
+      else if (
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 1
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyE, enemyN];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        console.log("------------------------");
+        if (direction === enemyE) {
+          state.enemyPos = [
+            state.enemyPos[0] + 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "east";
+        } else if (direction === enemyN) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] - 1,
+          ];
+          direction = "north";
+        }
+      } else if (
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyW, enemyN];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        if (direction === enemyW) {
+          state.enemyPos = [
+            state.enemyPos[0] - 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "west";
+        } else if (direction === enemyN) {
+          state.enemyPos = [
+            state.enemyPos[0],
+            state.enemyPos[1],
+            state.enemyPos[2] - 1,
+          ];
+          direction = "north";
+        }
+      } else if (
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0
+      ) {
+        // Do a 50% random choice
+        console.log("Doing 50% random choice");
+        const array = [enemyE, enemyW];
+        const randomIndex = Math.floor(Math.random() * array.length);
+        const direction = array[randomIndex];
+        state.enemyRotation = [0, direction, 0];
+        if (direction === enemyE) {
+          state.enemyPos = [
+            state.enemyPos[0] + 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "east";
+        } else if (direction === enemyW) {
+          state.enemyPos = [
+            state.enemyPos[0] - 1,
+            state.enemyPos[1],
+            state.enemyPos[2],
+          ];
+          direction = "west";
+        }
+      }
     }
-
-  }
+  };
 
   return (
     <>
@@ -554,7 +900,7 @@ const App = () => {
               rotation={state.enemyRotation}
             />
           </Suspense>
-          <MovingRedLight   />
+          <MovingRedLight />
           <Plane
             receiveShadow
             rotation={[Math.PI / -2, 0, 0]}
