@@ -369,25 +369,176 @@ const App = () => {
   let counter = 0
   let direction = "right"
 
+  let enemyN = Math.PI
+  let enemyS = 2 * Math.PI;
+  let enemyE = Math.PI / 2;
+  let enemyW = - Math.PI / 2;
+
+  state.enemyRotation[1] === enemyE;
+
+  // MONSTER MOVEMENT OLD
   setInterval(() => {
-    if (counter === 0) {
-      direction = "right"
-      state.enemyRotation = [0, Math.PI / 2, 0];
-    } else if (counter === state.enemyPath.length - 1) {
-      direction = "left"
-      state.enemyRotation = [0, - Math.PI / 2, 0];
-    }
-    if (direction === "right") {
-      counter++;
-      state.enemyPos = state.enemyPath[counter];
-      console.log(state.enemyPos)
-    } else if (direction === "left") {
-      counter--;
-      state.enemyPos = state.enemyPath[counter];
-    }
-    
-    
+    moveEnemy()
+    // console.log(state.enemyRotation[1] * (180 / Math.PI));
+    // if (counter === 0) {
+    //   direction = "right"
+    //   state.enemyRotation = [0, enemyE , 0];
+    // } else if (counter === state.enemyPath.length - 1) {
+    //   direction = "left"
+    //   state.enemyRotation = [0, enemyW , 0];
+    // }
+    // if (direction === "right") {
+    //   counter++;
+    //   state.enemyPos = state.enemyPath[counter];
+    //   console.log(state.enemyPos)
+    // } else if (direction === "left") {
+    //   counter--;
+    //   state.enemyPos = state.enemyPath[counter];
+    // }
+        
   }, 1000)
+
+  // MONSTER MOVEMENT NEW
+  const moveEnemy = () => {
+    if (state.enemyRotation[1] === enemyE) {
+      direction = "east";
+      if (maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0) {
+        console.log("Moving Forward");
+        state.enemyPos = [
+          state.enemyPos[0] + 1,
+          state.enemyPos[1],
+          state.enemyPos[2],
+        ];
+      } else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 1 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 1
+      ) {
+        console.log("Turning Back");
+        state.enemyRotation = [0, enemyW, 0];
+        direction = "west";
+      } else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 1 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0
+      ) {
+        console.log("Turning Right");
+        state.enemyRotation = [0, enemyS, 0];
+        direction = "south";
+      } else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 1
+      ) {
+        console.log("Turning Left");
+        state.enemyRotation = [0, enemyN, 0];
+        direction = "north";
+      }
+    } else if (state.enemyRotation[1] === enemyS) {
+      direction = "south";
+      if (maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0) {
+        console.log("Moving Forward");
+        state.enemyPos = [
+          state.enemyPos[0],
+          state.enemyPos[1],
+          state.enemyPos[2] + 1,
+        ];
+      } else if (
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 1
+      ) {
+        console.log("Turning Back");
+        state.enemyRotation = [0, enemyN, 0];
+        direction = "north";
+      } else if (
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0
+      ) {
+        console.log("Turning Right");
+        state.enemyRotation = [0, enemyW, 0];
+        direction = "west";
+      } else if (
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 1
+      ) {
+        console.log("Turning Left");
+        state.enemyRotation = [0, enemyE, 0];
+        direction = "east";
+      }
+    } else if (state.enemyRotation[1] === enemyW) {
+      direction = "west";
+      if (maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0) {
+        console.log("Moving Forward");
+        state.enemyPos = [
+          state.enemyPos[0] - 1,
+          state.enemyPos[1],
+          state.enemyPos[2],
+        ];
+      } else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 1 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 1
+      ) {
+        console.log("Turning Back");
+        state.enemyRotation = [0, enemyE, 0];
+        direction = "east";
+      } else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 1 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 0 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 1
+      ) {
+        console.log("Turning Right");
+        state.enemyRotation = [0, enemyN, 0];
+        direction = "north";
+      } else if (
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 1 &&
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5 + 1][state.enemyPos[0] + 5] === 0
+      ) {
+        console.log("Turning Left");
+        state.enemyRotation = [0, enemyS, 0];
+        direction = "south";
+      }
+    } else if (state.enemyRotation[1] === enemyN) {
+      direction = "west";
+      if (maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 0) {
+        console.log("Moving Forward");
+        state.enemyPos = [
+          state.enemyPos[0],
+          state.enemyPos[1],
+          state.enemyPos[2] - 1,
+        ];
+      } else if (
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 1
+      ) {
+        console.log("Turning Back");
+        state.enemyRotation = [0, enemyE, 0];
+        direction = "east";
+      } else if (
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 0
+      ) {
+        console.log("Turning Right");
+        state.enemyRotation = [0, enemyW, 0];
+        direction = "north";
+      } else if (
+        maze[state.enemyPos[2] + 5 - 1][state.enemyPos[0] + 5] === 1 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 + 1] === 0 &&
+        maze[state.enemyPos[2] + 5][state.enemyPos[0] + 5 - 1] === 1
+      ) {
+        console.log("Turning Left");
+        state.enemyRotation = [0, enemyE, 0];
+        direction = "south";
+      }
+    }
+
+  }
 
   return (
     <>
